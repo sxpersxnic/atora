@@ -1,0 +1,25 @@
+{
+	"plugins": [
+		"prettier-plugin-jsdoc",
+		"prettier-plugin-organize-imports",
+		"prettier-plugin-sort-imports",
+		"prettier-plugin-tailwindcss"
+	],
+	"tailwindFunctions": ["clsx"],
+	"tailwindPreserveWhitespace": false,
+	"tailwindPreserveDuplicates": false,
+	"trailingComma": "all",
+	"tabWidth": 2,
+	"semi": true,
+	"singleQuote": true,
+	"jsxSingleQuote": true,
+	"printWidth": 80,
+	"arrowParens": "always",
+	"endOfLine": "crlf",
+	"bracketSpacing": true,
+	"htmlWhitespaceSensitivity": "css",
+	"singleAttributePerLine": true,
+	"proseWrap": "always",
+	"quoteProps": "as-needed",
+	"useTabs": true
+}

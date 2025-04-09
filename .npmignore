@@ -1,0 +1,8 @@
+src/
+dev/
+tests/
+.gitignore
+.editorconfig
+.prettierrc
+.vscode/
+*.config.*

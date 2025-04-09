@@ -3,12 +3,12 @@
 		"tsBuildInfoFile": "./node_modules/.tmp/tsconfig.node.tsbuildinfo",
 		"target": "ES2022",
 		"lib": ["ES2023", "DOM.Iterable", "DOM"],
-    "jsx": "preserve",
+		"jsx": "preserve",
 		"module": "ESNext",
 		"skipLibCheck": true,
+		"rootDir": ".",
 		"paths": {
-			"@/*": ["./src/*"],
-			"@css": ["./src/css/tailwind.css"]
+			"@/*": ["./src/*"]
 		},
 
 		/* Bundler mode */
@@ -26,6 +26,5 @@
 		"noUncheckedSideEffectImports": true
 	},
 	"include": ["src", "vite.config.ts"],
-  "exclude": ["node_modules", "dist", "build", "out", "coverage", "public"],
+	"exclude": ["node_modules", "dist", "build", "out", "coverage", "public"]
 }
-
