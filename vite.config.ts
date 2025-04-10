@@ -20,7 +20,7 @@ export default defineConfig({
 	build: {
 		lib: {
 			entry: resolve(__dirname, 'src/index.ts'),
-			name: 'sonix-ui',
+			name: 'atora',
 			formats: ['es', 'umd', 'cjs'],
 			fileName: (format) => `index.${format}.js`,
 		},
@@ -29,7 +29,7 @@ export default defineConfig({
 			output: {
 				assetFileNames: (assetInfo) => {
 					if (assetInfo.names.map((name) => name.endsWith('.css')))
-						return 'sonix-ui.css';
+						return 'atora.css';
 					return '[name][extname]';
 				},
 				globals: {
