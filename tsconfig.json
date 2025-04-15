@@ -23,5 +23,5 @@
 		"noUncheckedSideEffectImports": true
 	},
 	"include": ["src", "vite.config.ts"],
-	"exclude": ["node_modules", "dist", "build", "out", "coverage", "public"]
+	"exclude": ["node_modules", "dist", "build", "out", "coverage", "public", "src/stories", ".storybook"]
 }
