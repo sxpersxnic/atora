@@ -4,6 +4,7 @@
   "license": "MIT",
   "author": "sxperlinx",
   "description": "A React component library.",
+  "type": "module",
   "keywords": [
     "react",
     "component",
@@ -15,7 +16,9 @@
     "type": "git",
     "url": "git+https://github.com/sxperlinx/atora.git"
   },
-  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
   "scripts": {
     "build": "vite build && npx @tailwindcss/cli -i ./src/css/tailwind.css -o ./dist/atora.css --minify",
     "clean:build": "rm -rf dist && npm run build",
@@ -26,7 +29,8 @@
     "check": "npm run fmt && npm run lint && npm run typecheck && npm run dry-pack",
     "publish": "npm publish --access public",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "wasm": "./scripts/build-wasm"
   },
   "files": [
     "dist"
