@@ -18,7 +18,7 @@ bun add atora
 
 ### Add CSS to your main file (e.g. in React `App.tsx`)
 
-> [!WARNING]
+> [!IMPORTANT]
 > 
 > Only import the css file when you prefer using the predefined styles. Otherwise you can skip importing the css file and style the components custom.
 
