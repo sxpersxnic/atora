@@ -18,7 +18,8 @@ A React Component Library
 
 2. **Add CSS to your main file (e.g. in React `App.tsx`):**
 
-    > [!IMPORTANT]
+    > [!WARNING]
+    > 
     > Only import the css file when you prefer using the predefined styles. Otherwise you can skip importing the css file and style the components custom.
 
     ```js
