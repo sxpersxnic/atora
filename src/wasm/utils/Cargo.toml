@@ -1,0 +1,52 @@
+[package]
+name = "utils"
+version = "0.1.0"
+edition = "2021"
+description = "WebAssembly utility library for text processing, crypto, math, time, and validation."
+repository = "https://github.com/sxpersxnic/atora"
+license = "GPL-3.0-only"
+
+[lib]
+crate-type = ["cdylib"]
+
+[features]
+default = ["wee_alloc"]
+wee_alloc = ["dep:wee_alloc"]
+
+[dependencies]
+wasm-bindgen = "0.2.100"
+console_error_panic_hook = "0.1.7"
+
+# Core WASM utilities
+js-sys = "0.3.77"
+web-sys = "0.3.77"
+wasm-bindgen-futures = "0.4.42"
+
+# Serialization & JSON
+serde = { version = "1.0", features = ["derive"] }
+serde-wasm-bindgen = "0.6.5"
+serde_json = "1.0"
+
+# Text processing & regex
+regex = "1.11.1"
+unicode-segmentation = "1.12.0"
+
+# Date/time handling
+chrono = { version = "0.4.38", features = ["wasm-bindgen"] }
+
+# Math & algorithms
+nalgebra = "0.33.0"
+
+# Hashing & crypto
+sha2 = "0.10.8"
+base64 = "0.22.1"
+
+# UUID generation
+uuid = { version = "1.11.0", features = ["v4", "js"] }
+
+# Error handling
+thiserror = "2.0.7"
+anyhow = "1.0.95"
+
+# Memory allocator for WASM
+wee_alloc = { version = "0.4.5", optional = true }

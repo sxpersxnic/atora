@@ -1,5 +1,5 @@
-import type { Preview } from '@storybook/react'
-import '../src/css/tailwind.css';
+import type { Preview } from '@storybook/react-vite'
+import '../src/css/globals.css';
 
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 
