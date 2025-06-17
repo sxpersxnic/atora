@@ -145,14 +145,14 @@ export default function DataValidator({
 					sanitizedData: fallbackValidator.sanitizeData(inputData),
 					securityScore: 0
 				};
-				
+
 				// Calculate security score
 				let securityScore = 100;
 				if (results.containsSqlInjection) securityScore -= 40;
 				if (results.containsXss) securityScore -= 40;
 				if (results.passwordStrength < 50 && inputData.length > 5) securityScore -= 20;
 				results.securityScore = Math.max(0, securityScore);
-				
+
 				console.log('📊 WASM+Fallback Results:', results);
 				return results;
 			} else {
@@ -174,14 +174,14 @@ export default function DataValidator({
 					sanitizedData: fallbackValidator.sanitizeData(inputData),
 					securityScore: 0
 				};
-				
+
 				// Calculate security score
 				let securityScore = 100;
 				if (results.containsSqlInjection) securityScore -= 40;
 				if (results.containsXss) securityScore -= 40;
 				if (results.passwordStrength < 50 && inputData.length > 5) securityScore -= 20;
 				results.securityScore = Math.max(0, securityScore);
-				
+
 				console.log('📊 JavaScript Results:', results);
 				return results;
 			}
@@ -293,7 +293,7 @@ export default function DataValidator({
 										</span>
 									</div>
 									<div className="w-full bg-gray-200 rounded-full h-2">
-										<div 
+										<div
 											className={`h-2 rounded-full transition-all duration-300 ${results.securityScore >= 80 ? 'bg-green-500' : results.securityScore >= 60 ? 'bg-yellow-500' : 'bg-red-500'}`}
 											style={{ width: `${results.securityScore}%` }}
 										></div>
@@ -375,7 +375,7 @@ export default function DataValidator({
 									<span className="text-gray-800 font-mono">{results.characterEncoding}</span>
 								</div>
 							</div>
-							
+
 							{results.sanitizedData !== data && (
 								<div className="mt-3 pt-3 border-t border-gray-200">
 									<div className="flex flex-col gap-1">

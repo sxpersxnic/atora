@@ -128,7 +128,7 @@ export default function PerformanceBenchmark({
 					}
 					return Math.abs(hash).toString(16);
 				};
-				
+
 				const start = performance.now();
 				for (let i = 0; i < iter; i++) {
 					simpleHash(data);
@@ -182,11 +182,11 @@ export default function PerformanceBenchmark({
 	const generateTestData = (size: number): string => {
 		const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789 ';
 		let result = '';
-		
+
 		if (selectedTest === 'url-validation' || selectedTest === 'protocol-extraction') {
 			return 'https://example.com/api/v1/users?id=123&name=test';
 		}
-		
+
 		for (let i = 0; i < size; i++) {
 			result += chars.charAt(Math.floor(Math.random() * chars.length));
 		}
@@ -198,29 +198,29 @@ export default function PerformanceBenchmark({
 		if (!test) return;
 
 		setLoading(true);
-		
+
 		try {
 			// Give the UI time to update
 			await new Promise(resolve => setTimeout(resolve, 100));
-			
+
 			const testData = generateTestData(test.dataSize);
 			const testIterations = test.operations;
-			
+
 			console.log(`🏁 Running benchmark: ${test.name}`);
 			console.log(`📊 Iterations: ${testIterations}, Data size: ${test.dataSize}`);
-			
+
 			// Force garbage collection if available
 			const windowWithGc = window as { gc?: () => void };
 			if (windowWithGc.gc) {
 				windowWithGc.gc();
 			}
-			
+
 			const performanceWithMemory = performance as { memory?: { usedJSHeapSize: number } };
 			const memoryBefore = performanceWithMemory.memory?.usedJSHeapSize || 0;
-			
+
 			// Run JavaScript benchmark
 			const jsTime = test.jsFunction(testData, testIterations);
-			
+
 			// Run WASM benchmark (if available)
 			let wasmTime = 0;
 			if (wasmModule && test.wasmFunction) {
@@ -228,15 +228,15 @@ export default function PerformanceBenchmark({
 				await new Promise(resolve => setTimeout(resolve, 50));
 				wasmTime = test.wasmFunction(testData, testIterations);
 			}
-			
+
 			const memoryAfter = performanceWithMemory.memory?.usedJSHeapSize || 0;
 			const memoryUsage = memoryAfter - memoryBefore;
-			
+
 			// Calculate results
 			const wasmOpsPerSecond = wasmTime > 0 ? (testIterations / wasmTime) * 1000 : 0;
 			const jsOpsPerSecond = jsTime > 0 ? (testIterations / jsTime) * 1000 : 0;
 			const speedupFactor = wasmTime > 0 ? jsTime / wasmTime : 0;
-			
+
 			let winner: 'WASM' | 'JavaScript' | 'Tie' = 'Tie';
 			if (wasmTime > 0 && jsTime > 0) {
 				const threshold = 0.05; // 5% threshold for "tie"
@@ -245,7 +245,7 @@ export default function PerformanceBenchmark({
 			} else if (wasmTime === 0) {
 				winner = 'JavaScript';
 			}
-			
+
 			const benchmarkResult: BenchmarkResults = {
 				wasmTime,
 				jsTime,
@@ -258,12 +258,12 @@ export default function PerformanceBenchmark({
 				winner,
 				memoryUsage
 			};
-			
+
 			console.log('📈 Benchmark Results:', benchmarkResult);
-			
+
 			setResults(prev => [benchmarkResult, ...prev.slice(0, 9)]); // Keep last 10 results
 			onBenchmark?.(benchmarkResult);
-			
+
 		} catch (error) {
 			console.error('Benchmark failed:', error);
 		} finally {
@@ -310,7 +310,7 @@ export default function PerformanceBenchmark({
 								))}
 							</select>
 						</div>
-						
+
 						<div>
 							<label className="block text-sm font-medium text-gray-700 mb-1">
 								Iterations
@@ -327,7 +327,7 @@ export default function PerformanceBenchmark({
 								<option value={100000}>100,000</option>
 							</select>
 						</div>
-						
+
 						<div className="flex items-end gap-2">
 							<button
 								onClick={runBenchmark}
@@ -344,7 +344,7 @@ export default function PerformanceBenchmark({
 							</button>
 						</div>
 					</div>
-					
+
 					{/* Test Description */}
 					{benchmarkTests[selectedTest] && (
 						<div className="p-3 bg-blue-50 rounded-md border-l-4 border-blue-500">
@@ -359,21 +359,20 @@ export default function PerformanceBenchmark({
 				{results.length > 0 && (
 					<div className="space-y-4">
 						<h3 className="text-lg font-medium text-gray-900">📊 Benchmark Results</h3>
-						
+
 						{/* Latest Result - Highlighted */}
 						{results[0] && (
 							<div className="p-4 bg-gradient-to-r from-blue-50 to-green-50 rounded-lg border-2 border-blue-200">
 								<div className="flex items-center justify-between mb-3">
 									<h4 className="font-semibold text-gray-900">{results[0].testType} (Latest)</h4>
-									<div className={`px-3 py-1 rounded-full text-sm font-medium ${
-										results[0].winner === 'WASM' ? 'bg-green-100 text-green-800' :
-										results[0].winner === 'JavaScript' ? 'bg-blue-100 text-blue-800' :
-										'bg-gray-100 text-gray-800'
-									}`}>
+									<div className={`px-3 py-1 rounded-full text-sm font-medium ${results[0].winner === 'WASM' ? 'bg-green-100 text-green-800' :
+											results[0].winner === 'JavaScript' ? 'bg-blue-100 text-blue-800' :
+												'bg-gray-100 text-gray-800'
+										}`}>
 										🏆 {results[0].winner} Wins
 									</div>
 								</div>
-								
+
 								<div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
 									<div>
 										<div className="text-gray-600">WASM Time</div>
@@ -387,24 +386,23 @@ export default function PerformanceBenchmark({
 									</div>
 									<div>
 										<div className="text-gray-600">Speedup</div>
-										<div className={`font-mono font-medium ${
-											results[0].speedupFactor > 1 ? 'text-green-600' : 
-											results[0].speedupFactor < 1 ? 'text-red-600' : 'text-gray-600'
-										}`}>
+										<div className={`font-mono font-medium ${results[0].speedupFactor > 1 ? 'text-green-600' :
+												results[0].speedupFactor < 1 ? 'text-red-600' : 'text-gray-600'
+											}`}>
 											{results[0].speedupFactor > 0 ? `${results[0].speedupFactor.toFixed(2)}x` : 'N/A'}
 										</div>
 									</div>
 									<div>
 										<div className="text-gray-600">Operations/sec</div>
 										<div className="font-mono font-medium text-xs">
-											WASM: {results[0].wasmOpsPerSecond > 0 ? Math.round(results[0].wasmOpsPerSecond).toLocaleString() : 'N/A'}<br/>
+											WASM: {results[0].wasmOpsPerSecond > 0 ? Math.round(results[0].wasmOpsPerSecond).toLocaleString() : 'N/A'}<br />
 											JS: {Math.round(results[0].jsOpsPerSecond).toLocaleString()}
 										</div>
 									</div>
 								</div>
 							</div>
 						)}
-						
+
 						{/* Historical Results */}
 						{results.length > 1 && (
 							<div className="space-y-2">
@@ -417,11 +415,10 @@ export default function PerformanceBenchmark({
 												<div className="flex items-center gap-4 text-xs text-gray-600">
 													<span>WASM: {result.wasmTime > 0 ? `${result.wasmTime.toFixed(1)}ms` : 'N/A'}</span>
 													<span>JS: {result.jsTime.toFixed(1)}ms</span>
-													<span className={`px-2 py-1 rounded ${
-														result.winner === 'WASM' ? 'bg-green-100 text-green-700' :
-														result.winner === 'JavaScript' ? 'bg-blue-100 text-blue-700' :
-														'bg-gray-100 text-gray-700'
-													}`}>
+													<span className={`px-2 py-1 rounded ${result.winner === 'WASM' ? 'bg-green-100 text-green-700' :
+															result.winner === 'JavaScript' ? 'bg-blue-100 text-blue-700' :
+																'bg-gray-100 text-gray-700'
+														}`}>
 														{result.winner}
 													</span>
 												</div>

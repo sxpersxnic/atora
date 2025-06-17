@@ -99,9 +99,9 @@ export default function CryptoTools({
 				const c = i < input.length ? input.charCodeAt(i++) : 0;
 				const bitmap = (a << 16) | (b << 8) | c;
 				result += chars.charAt((bitmap >> 18) & 63) +
-						  chars.charAt((bitmap >> 12) & 63) +
-						  (i - 2 < input.length ? chars.charAt((bitmap >> 6) & 63) : '=') +
-						  (i - 1 < input.length ? chars.charAt(bitmap & 63) : '=');
+					chars.charAt((bitmap >> 12) & 63) +
+					(i - 2 < input.length ? chars.charAt((bitmap >> 6) & 63) : '=') +
+					(i - 1 < input.length ? chars.charAt(bitmap & 63) : '=');
 			}
 			return result;
 		},
@@ -152,7 +152,7 @@ export default function CryptoTools({
 			for (const char of input) {
 				freq[char] = (freq[char] || 0) + 1;
 			}
-			
+
 			let entropy = 0;
 			const length = input.length;
 			for (const count of Object.values(freq)) {
@@ -344,20 +344,18 @@ export default function CryptoTools({
 								</div>
 								<div>
 									<div className="text-gray-600">Speed Difference</div>
-									<div className={`font-mono font-medium ${
-										results.hashComparison.wasmTime > 0 && results.hashComparison.wasmTime < results.hashComparison.jsTime ? 'text-green-600' : 'text-gray-600'
-									}`}>
-										{results.hashComparison.wasmTime > 0 ? 
-											`${(results.hashComparison.jsTime / results.hashComparison.wasmTime).toFixed(2)}x` : 
+									<div className={`font-mono font-medium ${results.hashComparison.wasmTime > 0 && results.hashComparison.wasmTime < results.hashComparison.jsTime ? 'text-green-600' : 'text-gray-600'
+										}`}>
+										{results.hashComparison.wasmTime > 0 ?
+											`${(results.hashComparison.jsTime / results.hashComparison.wasmTime).toFixed(2)}x` :
 											'N/A'}
 									</div>
 								</div>
 							</div>
 							{results.hashComparison.wasmHash && results.hashComparison.jsHash && (
 								<div className="mt-3 text-sm">
-									<span className={`px-2 py-1 rounded ${
-										results.hashComparison.match ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
-									}`}>
+									<span className={`px-2 py-1 rounded ${results.hashComparison.match ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+										}`}>
 										Hash Match: {results.hashComparison.match ? '✅ Yes' : '❌ No'}
 									</span>
 								</div>
