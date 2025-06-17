@@ -1,4 +1,3 @@
-import { is_external } from '../../../package/link/link';
 import { Element, Container } from '../../shared/types';
 
 interface Props extends Container {
