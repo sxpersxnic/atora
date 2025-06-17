@@ -6,38 +6,38 @@ const config: StorybookConfig = {
     "../src/**/*.mdx",
     "../src/**/*.stories.@(js|jsx|mjs|ts|tsx)"
   ],
+
   "staticDirs": ["../dist"],
+
   "addons": [
-    "@storybook/addon-essentials",
     "@storybook/addon-onboarding",
-    "@storybook/addon-interactions",
     "@storybook/addon-links",
-    "@storybook/addon-themes"
+    "@storybook/addon-themes",
+    "@storybook/addon-docs"
   ],
+
   "framework": {
     "name": "@storybook/react-vite",
     "options": {}
   },
-	"docs": {
-		"autodocs": "tag"
-	},
-	viteFinal: async (config) => {
-		// Add path aliases
-		config.resolve = config.resolve || {};
-		config.resolve.alias = {
-			...config.resolve.alias,
-			'@': resolve(__dirname, '../src'),
-			'@/components': resolve(__dirname, '../src/components'),
-			'@/utils': resolve(__dirname, '../src/utils'),
-			'@/types': resolve(__dirname, '../src/types'),
-			'@/wasm': resolve(__dirname, '../src/wasm'),
-		};
 
-		// Add WASM support
-		config.assetsInclude = ['**/*.wasm'];
+  viteFinal: async (config) => {
+      // Add path aliases
+      config.resolve = config.resolve || {};
+      config.resolve.alias = {
+          ...config.resolve.alias,
+          '@': resolve(__dirname, '../src'),
+          '@/components': resolve(__dirname, '../src/components'),
+          '@/utils': resolve(__dirname, '../src/utils'),
+          '@/types': resolve(__dirname, '../src/types'),
+          '@/wasm': resolve(__dirname, '../src/wasm'),
+      };
 
-		return config;
-	},
+      // Add WASM support
+      config.assetsInclude = ['**/*.wasm'];
+
+      return config;
+  }
 };
 
 export default config;
