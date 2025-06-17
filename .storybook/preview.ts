@@ -1,5 +1,5 @@
 import type { Preview } from '@storybook/react'
-import '../src/css/tailwind.css';
+import '../src/css/globals.css';
 
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 
