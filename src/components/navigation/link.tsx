@@ -6,7 +6,6 @@ interface Props extends Container {
 }
 
 export default function Link({ href, children }: Props): Element {
-	const external = is_external(href);
 	return (
 		<a href={href}>{children}</a>
 	);
