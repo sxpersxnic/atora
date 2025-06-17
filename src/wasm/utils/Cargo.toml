@@ -1,11 +1,10 @@
 [package]
-name = "link"
+name = "utils"
 version = "0.1.0"
-edition = "2024"
-description = "WebAssembly library for lightning-fast Link component."
-repository = "https://github.com/sxperlinx/atora"
-license = "MIT"
-license-file = "../../../LICENSE"
+edition = "2021"
+description = "WebAssembly utility library for text processing, crypto, math, time, and validation."
+repository = "https://github.com/sxpersxnic/atora"
+license = "GPL-3.0-only"
 
 [lib]
 crate-type = ["cdylib"]
@@ -42,8 +41,7 @@ nalgebra = "0.33.0"
 sha2 = "0.10.8"
 base64 = "0.22.1"
 
-# Utilities
-url = "2.5.4"
+# UUID generation
 uuid = { version = "1.11.0", features = ["v4", "js"] }
 
 # Error handling

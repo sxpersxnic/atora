@@ -37,6 +37,7 @@ interface BuildOptions {
   lint?: boolean
   test?: boolean
   skipOptimization?: boolean
+  skipWasm?: boolean
 }
 
 class LibraryBuilder {
@@ -105,6 +106,27 @@ class LibraryBuilder {
       }
     }
 
+    // Check for WASM prerequisites if not skipping WASM
+    if (!this.options.skipWasm) {
+      try {
+        execSync('wasm-pack --version', { stdio: 'pipe' })
+      } catch {
+        log.warn('wasm-pack not found. WASM build will be skipped.')
+        log.dim('  Install wasm-pack: https://rustwasm.github.io/wasm-pack/installer/')
+        this.options.skipWasm = true
+      }
+
+      // Check if Rust WASM crates exist
+      const wasmCrates = ['link', 'utils', 'url-tools']
+      for (const crate of wasmCrates) {
+        const cratePath = join('src', 'wasm', crate, 'Cargo.toml')
+        if (!existsSync(cratePath)) {
+          log.warn(`WASM crate not found: ${crate}`)
+          log.dim(`  Expected: ${cratePath}`)
+        }
+      }
+    }
+
     log.success('Prerequisites check passed')
   }
 
@@ -115,8 +137,29 @@ class LibraryBuilder {
     
     const distPath = join(process.cwd(), 'dist')
     if (existsSync(distPath)) {
-      rmSync(distPath, { recursive: true, force: true })
-      log.success('Build directory cleaned')
+      // Clean only JS/TS build outputs, preserve WASM directories
+      const filesToClean = [
+        'index.js', 'index.mjs', 'index.cjs', 
+        'index.d.ts', 'index.d.cts', 
+        'index.css', 'styles.css',
+        '*.map'
+      ]
+      
+      for (const pattern of filesToClean) {
+        const filePath = join(distPath, pattern)
+        if (pattern.includes('*')) {
+          // Handle glob patterns for map files
+          try {
+            execSync(`rm -f "${filePath}"`, { stdio: 'pipe' })
+          } catch {
+            // Ignore if files don't exist
+          }
+        } else if (existsSync(filePath)) {
+          rmSync(filePath, { force: true })
+        }
+      }
+      
+      log.success('Build directory cleaned (WASM outputs preserved)')
     } else {
       log.dim('  No build directory to clean')
     }
@@ -158,6 +201,56 @@ class LibraryBuilder {
     if (!this.options.watch) {
       log.success('Library build completed')
     }
+  }
+
+  private async buildWasm(): Promise<void> {
+    if (this.options.skipWasm) {
+      log.dim('Skipping WASM build')
+      return
+    }
+
+    log.step('Building WASM crates...')
+
+    const wasmCrates = ['link', 'utils', 'url-tools']
+    const originalCwd = process.cwd()
+
+    for (const crate of wasmCrates) {
+      const cratePath = join('src', 'wasm', crate)
+      const crateCargoPath = join(cratePath, 'Cargo.toml')
+      
+      if (!existsSync(crateCargoPath)) {
+        log.warn(`Skipping WASM crate '${crate}' - Cargo.toml not found`)
+        continue
+      }
+
+      try {
+        log.dim(`  Building WASM crate: ${crate}`)
+        
+        // Change to crate directory and build
+        process.chdir(cratePath)
+        
+        const wasmPackCommand = `wasm-pack build --target bundler --out-dir ../../../dist/${crate}`
+        
+        execSync(wasmPackCommand, {
+          stdio: this.options.verbose ? 'inherit' : 'pipe',
+          encoding: 'utf8',
+        })
+        
+        log.success(`WASM crate '${crate}' built successfully`)
+        
+      } catch (error: any) {
+        log.error(`Failed to build WASM crate '${crate}'`)
+        if (this.options.verbose) {
+          console.error(error)
+        }
+        process.exit(1)
+      } finally {
+        // Always return to original directory
+        process.chdir(originalCwd)
+      }
+    }
+
+    log.success('All WASM crates built successfully')
   }
 
   private async analyzeBundle(): Promise<void> {
@@ -229,6 +322,23 @@ class LibraryBuilder {
       log.dim('  ./dist/styles.css   - Compiled styles')
     }
 
+    // Show WASM outputs if they exist
+    if (!this.options.skipWasm) {
+      const wasmCrates = ['link', 'utils', 'url-tools']
+      let hasWasmOutputs = false
+      
+      for (const crate of wasmCrates) {
+        const wasmPath = join('dist', crate, `${crate}_bg.wasm`)
+        if (existsSync(wasmPath)) {
+          if (!hasWasmOutputs) {
+            log.info('WASM outputs:')
+            hasWasmOutputs = true
+          }
+          log.dim(`  ./dist/${crate}/     - WASM ${crate} module`)
+        }
+      }
+    }
+
     console.log('\n' + colors.cyan + 'Ready to publish! 🚀' + colors.reset)
     console.log('Run ' + colors.yellow + 'pnpm publish' + colors.reset + ' to publish to npm')
   }
@@ -242,7 +352,7 @@ class LibraryBuilder {
 
   async build(): Promise<void> {
     try {
-      console.log(colors.cyan + '🏗️  Building React Component Library' + colors.reset)
+      console.log(colors.cyan + '🏗️  Building React Component Library with WASM' + colors.reset)
       console.log('='.repeat(50) + '\n')
 
       await this.checkPrerequisites()
@@ -250,6 +360,7 @@ class LibraryBuilder {
       await this.runTypeCheck()
       await this.runLinting()
       await this.runTests()
+      await this.buildWasm()
       await this.buildLibrary()
       
       if (!this.options.watch) {
@@ -303,6 +414,9 @@ function parseArgs(): BuildOptions {
       case '--skip-optimization':
         options.skipOptimization = true
         break
+      case '--skip-wasm':
+        options.skipWasm = true
+        break
       case '--help':
       case '-h':
         printHelp()
@@ -334,10 +448,12 @@ ${colors.yellow}Options:${colors.reset}
   --no-type-check          Skip TypeScript type checking
   --no-lint                Skip ESLint
   --skip-optimization      Skip build optimization
+  --skip-wasm              Skip WASM crate building
   --help, -h               Show this help message
 
 ${colors.yellow}Examples:${colors.reset}
-  pnpm build                    # Standard build
+  pnpm build                    # Standard build (includes WASM)
+  pnpm build --skip-wasm        # Build without WASM crates
   pnpm build --watch            # Build and watch for changes
   pnpm build --analyze --test   # Build with analysis and tests
   pnpm build --verbose          # Build with detailed output
