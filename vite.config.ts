@@ -13,7 +13,7 @@ export default defineConfig({
 			insertTypesEntry: true,
 			copyDtsFiles: true,
 			include: ['src/**/*.ts', 'src/**/*.tsx'],
-			exclude: ['node_modules', 'dist', 'src/main.tsx'],
+			exclude: ['node_modules', 'dist', 'src/main.tsx', '.storybook', 'src/stories'],
 			outDir: 'dist/types',
 		}),
 	],

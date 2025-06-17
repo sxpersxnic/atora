@@ -27,6 +27,20 @@ bun add atora
 import 'atora/dist/atora.css;
 ```
 
+## Library includes
+
+- **Interactive**
+  - **Buttons**
+  - **Input**
+  - **Dropdown**
+- **Navigation**
+  - **Sidenav**
+  - **NavCard**
+  - **NavLink**
+- **Layout**
+  - **Flex**
+  - **Grid**
+
 ## License
 
 This repository is licensed under the [MIT](LICENSE) license.
